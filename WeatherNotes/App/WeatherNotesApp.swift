@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 @main
 struct WeatherNotesApp: App {
@@ -13,7 +14,8 @@ struct WeatherNotesApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NotesListView()
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }
