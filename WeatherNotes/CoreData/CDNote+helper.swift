@@ -17,6 +17,18 @@ extension CDNote{
         get { title_ ?? "" }
         set { title_ = newValue }
     }
+    var location: String {
+        get { location_ ?? "" }
+        set { location_ = newValue }
+    }
+    var weatherDescription: String {
+        get { weatherDescription_ ?? "" }
+        set { weatherDescription_ = newValue }
+    }
+    var icon: String {
+        get { icon_ ?? "" }
+        set { icon_ = newValue }
+    }
     public var dateAndTime: Date {
         get { dateAndTime_ ?? Date() }
         set { dateAndTime_ = newValue }
@@ -34,7 +46,7 @@ extension CDNote{
     
     static func fetch(_ predicate: NSPredicate = .all) -> NSFetchRequest<CDNote> {
         let request = CDNote.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \CDNote.id_, ascending: true)]
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \CDNote.dateAndTime_, ascending: true)]
         return request
     }
 }
