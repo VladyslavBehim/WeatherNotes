@@ -28,6 +28,7 @@ struct NoteRowView: View {
                 Text(note.title)
                     .font(.headline)
                     .fontWeight(.semibold)
+                    .lineLimit(2)
                 Spacer()
                 Text(formattedDate)
                     .font(.subheadline)

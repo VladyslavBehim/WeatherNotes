@@ -28,7 +28,9 @@ struct NoteDetailsView: View {
         String(format: "%.1f℃", note.temperature)
     }
     @State private var isShowingDetails: Bool = false
-    
+    @State private var isShowingDeletionAlert: Bool = false
+    @Environment(\.dismiss) private var dismiss
+
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
@@ -37,22 +39,36 @@ struct NoteDetailsView: View {
                         Text(note.title)
                             .font(.largeTitle.bold())
                             .multilineTextAlignment(.leading)
+                            .lineLimit(2)
+
                         Spacer()
-                        Button {
-                            withAnimation(.snappy) {
-                                isShowingDetails.toggle()
+                        HStack{
+                            Button(role:.destructive){
+                                isShowingDeletionAlert.toggle()
+                            } label: {
+                                Image(systemName: "trash")
+                                    .padding(.horizontal)
+                                    .padding(.vertical , 8)
+                                    .background(Color.red.opacity(0.25))
+                                    .clipShape(RoundedRectangle(cornerRadius: 15))
                             }
-                        } label: {
-                            HStack{
-                                Text(!isShowingDetails ? "Show more details" : "Hide details")
+
+                            Button {
+                                withAnimation(.snappy) {
+                                    isShowingDetails.toggle()
+                                }
+                            } label: {
+                                HStack{
+                                    Text(!isShowingDetails ? "Show more details" : "Hide details")
+                                }
+                                .padding(.horizontal)
+                                .padding(.vertical , 8)
+                                .background(!isShowingDetails ? Color.blue.opacity(0.25) : Color.blue.opacity(0.45))
+                                .clipShape(RoundedRectangle(cornerRadius: 15))
+                                .contentTransition(.numericText())
                             }
-                            .font(.subheadline)
-                            .padding(.horizontal)
-                            .padding(.vertical , 8)
-                            .background(!isShowingDetails ? Color.blue.opacity(0.25) : Color.blue.opacity(0.45))
-                            .clipShape(RoundedRectangle(cornerRadius: 15))
-                            .contentTransition(.numericText())
                         }
+                        .font(.subheadline)
                     }
                     
                     
@@ -133,15 +149,27 @@ struct NoteDetailsView: View {
                                 .background(.teal.opacity(0.15))
                                 .foregroundStyle(.teal)
                                 .clipShape(Capsule())
-
+                            
                         }
                         .transition(.move(edge: .bottom).combined(with: .blurReplace))
                     }
-
+                    
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
             }
             .padding()
+            .alert(isPresented: $isShowingDeletionAlert) {
+                Alert(
+                    title: Text("Delete Note"),
+                    message: Text("Are you sure you want to delete this note?"),
+                    primaryButton: .cancel(),
+                    secondaryButton: .destructive(Text("Remove"), action: {
+                        dismiss()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                            CDNote.delete(note: self.note)
+                        }
+                    }))
+            }
         }
         .navigationBarTitleDisplayMode(.inline)
     }
