@@ -39,14 +39,29 @@ struct NoteRowView: View {
                     .font(.subheadline)
                 
                 if let url = URL(string: "https://openweathermap.org/img/wn/\(note.icon)@2x.png") {
-                    AsyncImage(url: url) { image in
-                        image
-                            .resizable()
-                            .scaledToFit()
-                    } placeholder: {
-                        ProgressView()
+                    AsyncImage(url: url) { phase in
+                        switch phase {
+                        case .empty:
+                            ProgressView()
+                                .frame(width: 40, height: 40)
+
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 40, height: 40)
+
+                        case .failure:
+                            Image(systemName: "network.slash")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 32, height: 32)
+                                .foregroundColor(.red)
+                        
+                        @unknown default:
+                            EmptyView()
+                        }
                     }
-                    .frame(width: 40, height: 40)
                 }
             }
         }
