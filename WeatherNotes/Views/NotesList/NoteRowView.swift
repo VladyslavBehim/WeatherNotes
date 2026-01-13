@@ -57,7 +57,7 @@ struct NoteRowView: View {
                                 Image(systemName: "network.slash")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 32, height: 32)
+                                    .frame(width: 25, height: 25)
                                     .foregroundColor(.red)
                                 
                             @unknown default:
@@ -69,6 +69,7 @@ struct NoteRowView: View {
                 .fontWeight(.semibold)
                 .font(.footnote)
                 .padding(.horizontal)
+                .padding(.vertical, 4)
                 .background(.blue.opacity(0.15))
                 .foregroundColor(.blue)
                 .clipShape(RoundedRectangle(cornerRadius: 20))
